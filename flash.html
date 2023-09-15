@@ -54,12 +54,18 @@ body {
         </form>
 
         <div class="privacy">
-            <a href="register.html"><button id="register-link">Generate</button></a>
+            <button id="register-link" onclick="callAPI()">Generate</button>
         </div>
+<script type="text/javascript" src="AI.js"></script>        
 <script>
     function myFunction() {
-  location.replace("index.html")
-}
+        location.replace("index.html")
+    }
+    function callAPI() {
+        let topic = document.getElementById("password").value;
+        console.log("Using the API...topic is: " + topic);
+        let temp = cleanNotesResponse("test");
+    }
 </script>
     </div>
 </body>
