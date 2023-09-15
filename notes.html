@@ -17,6 +17,9 @@
         body {
             font-family: "Montserrat";
             /* font: 14px/1.6'Avenir', Helvetica, Arial, sans-serif; */
+            align-content: center;
+           background-image: linear-gradient(100deg, #001214, #001f29);
+color: aliceblue;
         }
         i {
             font-size: 12px;
@@ -33,14 +36,15 @@
             margin: 0 auto;
             height: 600px;
             justify-content: flex-start;
-            align-content: flex-start;
+            align-content: center;
+            margin-top: 20%;
         }
         #app > * {
             border-radius: 2px;
             transition: all ease 0.3s;
         }
         #app>div {
-            position: relative;
+            position: center;
             width: 200px;
             padding: 8px;
             margin: 10px;
@@ -49,30 +53,32 @@
         
         textarea {
             display: block;
-            max-width: 200px;
-            padding: 8px;
+            max-width: 400px;
+            padding: 10px;
             margin: 10px;
             border: 1px solid #ccc;
+       
         }
         textarea:focus {
-            border-color: black;
+            border-color: rgb(214, 214, 214);
         }
         button {
             padding: 0;
             cursor: pointer;
-            background: transparent;
+            background: white;
             border: 0;
             -webkit-appearance: none;
         }
         .button {
             display: block;
             box-sizing: content-box;
-            width: 200px;
+            width: 400px;
             padding: 8px;
             margin: 0 10px 20px 10px;
             border: 1px solid #ccc;
             cursor: pointer;
             clear: both;
+            border-radius: 40px;
         }
         .button:hover {
             background-color: black;
@@ -124,7 +130,7 @@
 <body>
     <div id="app">
 
-        <h2>{{title}}</h2>
+        <h2>SMART<span style="color:red">LESS</span> NOTES</h2>
 
         <textarea autofocus placeholder="insert your note .." v-model="note.text"></textarea>
 
