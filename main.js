@@ -35,7 +35,7 @@ function addToDo(event) {
     // Create LI
     const newToDo = document.createElement('li');
     if (toDoInput.value === '') {
-            alert("You must write something!");
+            alert("Please Enter Note!");
         } 
     else {
         // newToDo.innerText = "hey";
@@ -48,7 +48,7 @@ function addToDo(event) {
 
         // check btn;
         const checked = document.createElement('button');
-        checked.innerHTML = '<i class="fas fa-check"></i>';
+        checked.innerHTML = '<i class="glyphicon glyphicon-thumbs-up"></i>';
         checked.classList.add('check-btn', `${savedTheme}-button`);
         toDoDiv.appendChild(checked);
         // delete btn;
@@ -138,7 +138,7 @@ function getTodos() {
 
         // check btn;
         const checked = document.createElement('button');
-        checked.innerHTML = '<i class="fas fa-check"></i>';
+        checked.innerHTML = '<i class="glyphicon glyphicon-thumbs-up"></i>';
         checked.classList.add("check-btn", `${savedTheme}-button`);
         toDoDiv.appendChild(checked);
         // delete btn;

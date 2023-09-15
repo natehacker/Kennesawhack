@@ -1,45 +1,67 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="styles.css" />
-    <title>Document</title>
-    <script src="app.js" defer></script>
-  </head>
-  <body>
+<html>
 
-    <div class="artboard" id="artboard">
-        <!-- Sample card -->
-      <div class="card">
-        <div class="card__side card__side--back">
-          <div class="card__details">
-            <p>
-       THINKLESS  Flashcards
-            </p>
-          </div>
-        </div>
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <meta name="description" content="Login - Register Template">
+    <meta name="author" content="Lorenzo Angelino aka MrLolok">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="main.css">
+    <style>
+        body {
+          background-image: linear-gradient(100deg, #001214, #001f29);
+        }
+        h1{
+            text-align:center ;
+        }
+        @import url('https://fonts.googleapis.com/css?family=Raleway');
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Raleway', sans-serif;
+    color: #F2F2F2;
+}
 
-        <div class="card__side card__side--front">
-          <div class="card__theme">
-            <div class="card__theme-box">
-              <p class="card__title">
-                Smartless  Flashcards
-              </p>
-         
-            </div>
-          </div>
-        </div>
-       
-      </div>
 
-    
-    </div>
-  <button class="btn" id="createCard">Create card</button>
+    </style>
+</head>
+
+<body>
   
+    <div id="container-login">
+      
+        <div id="title">
+            
+       
+            <p style="font-size: small;">
+                Generate Flashcards
+            </p>
+        </div>
 
+        <form>
+        
 
+            <div class="clearfix"></div>
 
-  </body>
+            <div class="input">
+                <div class="input-addon">
+                  <i class="material-icons">computer</i>
+                </div>
+                <input id="password" placeholder="Type to Generate" type="text" required class="validate" autocomplete="off">
+            </div>
+
+        </form>
+
+        <div class="privacy">
+            <a href="register.html"><button id="register-link">Generate</button></a>
+        </div>
+<script>
+    function myFunction() {
+  location.replace("index.html")
+}
+</script>
+    </div>
+</body>
+
 </html>
-
