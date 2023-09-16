@@ -80,6 +80,22 @@ color: aliceblue;
             clear: both;
             border-radius: 40px;
         }
+
+
+        .but {
+            display: block;
+            box-sizing: content-box;
+            width: 40px;
+            padding: 8px;
+            margin: 0 10px 20px 10px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            clear: both;
+          
+        
+        }
+
+
         .button:hover {
             background-color: black;
             color: white;
@@ -135,6 +151,7 @@ color: aliceblue;
         <textarea autofocus placeholder="insert your note .." v-model="note.text"></textarea>
 
         <button class="button" @click="addNote">Enhance</button>
+        <button class="but" onclick="myFunction()">Back</button>
 
         <div v-for="(note, index) in notes">
             <div class ="top">
@@ -146,6 +163,9 @@ color: aliceblue;
     </div>
     <script type="text/javascript" src="AI.js"></script>
     <script>
+                function myFunction() {
+  location.replace("index.html")
+}
         var app = new Vue({
             el: '#app',
             data: {
