@@ -54,20 +54,28 @@ body {
         </form>
 
         <div class="privacy">
-            <button id="register-link" onclick="callAPI()">Generate</button>
+            <!-- onclick="callAPI()" -->
+            <button id="register-link" >Generate</button>
         </div>
-<script type="text/javascript" src="AI.js"></script>        
+
+    </div>
+
+    <div class="artboard" id="artboard">
+        <!-- Sample card -->
+</div>
+
+
+
+    <script type="text/javascript" src="AI.js"></script>        
 <script>
     function myFunction() {
         location.replace("index.html")
     }
-    function callAPI() {
-        let topic = document.getElementById("password").value;
-        console.log("Using the API...topic is: " + topic);
-        let temp = cleanNotesResponse("test");
-    }
+    // function callAPI() {
+    //     let topic = document.getElementById("password").value;
+    //     console.log("Using the API...topic is: " + topic);
+    //     let temp = cleanNotesResponse("test");
+    // }
 </script>
-    </div>
 </body>
-
 </html>

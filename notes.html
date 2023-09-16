@@ -134,7 +134,7 @@ color: aliceblue;
 
         <textarea autofocus placeholder="insert your note .." v-model="note.text"></textarea>
 
-        <button class="button" @click="addNote">Submit</button>
+        <button class="button" @click="addNote">Enhance</button>
 
         <div v-for="(note, index) in notes">
             <div class ="top">
@@ -144,6 +144,7 @@ color: aliceblue;
             {{note.text}}
         </div>
     </div>
+    <script type="text/javascript" src="AI.js"></script>
     <script>
         var app = new Vue({
             el: '#app',
@@ -166,11 +167,8 @@ color: aliceblue;
                     if (text === '') {
                        return;
                     }
-                    this.notes.push({
-                        text,
-                        date: new Date(Date.now()).toLocaleString(),
-                    })
-                    this.note.text = ''
+                    enhanceNotes(text, this.notes);
+                    // this.note.text = ''
                 },
                 removeNote(index) {
                     this.$delete(this.notes, index)

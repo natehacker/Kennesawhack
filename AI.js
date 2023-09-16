@@ -1,5 +1,3 @@
-const OpenAI = require('openai');
-
 class Flashcard 
 {
     constructor(frontTxt, backTxt) 
@@ -16,83 +14,65 @@ class Flashcard
     }
 }
 
+async function postAPIData(inputTxt) {
+    // Default options are marked with *
+    const url = "https://api.openai.com/v1/chat/completions";
+    const api_key = "00-TfeBYPfWL1pCOelY   Xb6JT3BlbkFJXoT5ZtzB6DBJQ9vC99xW";
+    const data = {
+        "model": "gpt-3.5-turbo",
+        "messages": [{"role": "user", "content": inputTxt}],
+        "temperature": 0.7
+      };
 
-const openai_api_key = "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";
-const openai = new OpenAI({
-    //organization: "org-MSNC0HOVekCkygcdmeciX6jS",
-    apiKey: openai_api_key,
-});
+    const response = await fetch(url, {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      mode: "cors", // no-cors, *cors, same-origin
+      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: "same-origin", // include, *same-origin, omit
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + api_key // + token
+      },
+      redirect: "follow", // manual, *follow, error
+      referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      body: JSON.stringify(data), // body data type must match "Content-Type" header
+    });
 
-let topic = "Calculus";
+    return response.json(); // JSON object representing response
+};
 
-let notes = `-Stars and bars theorem, important.
-- Remember polynomial identities, will be on the test!
-- Find online calculus resources for extra study.`;
-
-let notePrompt = 
+function enhanceNotes(text, notesObj)
+{
+    const notePrompt = 
     `I have "notes" below. Please "optimize" the notes by inferring the topic they are talking about 
     and generating additional relevant content (return nothing if unsure on what to add). 
     Have no markdown in your answer. Do not keep things too concise nor too lengthy (50-60 words max), 
-    let each bullet be filled with helpful info:
-
-    "${notes}}"
+    let each bullet be filled with helpful info: "${text}}"
     `;
 
-let cardPrompt = 
-    `Generate "flash cards", where a "flash card" should take the form of a "front" and back" response.
-    The flash cards should contain conceptual questions on the following topic, and be limited to 9 cards: ${topic}`
+    console.log("Generating notes...");
 
+    postAPIData(notePrompt).then((json) => 
+    {
+        let msg = json['choices'][0]['message']['content'];
+        console.log("Got msg:\n" + msg + "\n\n");
+        let parsedEnhancedNotes = cleanNotesResponse(msg);
+        //console.log("Got enhanced notes:\n" + parsedEnhancedNotes + "\n\n");
 
-let tempNotesRes = `- **Stars and Bars Theorem**: Crucial combinatorics concept for distributing items into groups. Understand its applications in real-world scenarios like allocating tasks among workers or distributing prizes.
+        text = parsedEnhancedNotes; // Must set this as notesObj is expecting text obj
 
-- **Polynomial Identities**: Essential for upcoming test; focus on quadratic formula, difference of squares, and sum/difference of cubes. Practice simplifying expressions and solving equations using these identities.
-
-- **Online Calculus Resources**: Enhance calculus skills with resources like Khan Academy, Coursera, and MIT OpenCourseWare. Utilize video lectures, practice problems, and online communities for a comprehensive learning experience.`
-
-let tempFlashcardsRes = `Flash Card 1
-
-Front: What is the primary goal of differential calculus?
-Back: Differential calculus aims to understand and compute rates of change, particularly how functions change at specific points.
-Flash Card 2
-
-Front: What is the primary goal of integral calculus?
-Back: Integral calculus focuses on finding the accumulation of quantities, such as area under curves or total change over an interval.
-Flash Card 3
-
-Front: What is the derivative of a function, and what does it represent?
-Back: The derivative measures the rate of change of a function. It represents the slope of the tangent line to the function's graph at a given point.
-Flash Card 4
-
-Front: What is an indefinite integral?
-Back: An indefinite integral represents the antiderivative of a function, essentially finding a family of functions whose derivative is the original function.
-Flash Card 5
-
-Front: How is the definite integral different from the indefinite integral?
-Back: The definite integral computes the net accumulation of a function over a specific interval, resulting in a numerical value, while the indefinite integral yields a function family.
-Flash Card 6
-
-Front: What is the Fundamental Theorem of Calculus?
-Back: The Fundamental Theorem of Calculus states that integration and differentiation are inverse operations, connecting indefinite integrals and definite integrals.
-Flash Card 7
-
-Front: What is the chain rule in calculus, and why is it important?
-Back: The chain rule allows you to find the derivative of composite functions by breaking them down into simpler parts. It is essential for analyzing complex functions.
-Flash Card 8
-
-Front: What is the concept of a limit in calculus?
-Back: A limit describes the behavior of a function as it approaches a particular value or point. It is foundational in calculus and essential for continuity and differentiation.
-Flash Card 9
-
-Front: How do you find the area under a curve using calculus?
-Back: The area under a curve can be found using definite integrals, where you integrate the function over a specified interval to calculate the area enclosed by the curve and the x-axis.
-Flash Card 10
-
-Front: What is the Mean Value Theorem, and what does it state?
-Back: The Mean Value Theorem states that if a function is continuous on a closed interval, there exists at least one point within that interval where the instantaneous rate of change (derivative) is equal to the average rate of change.`
+        notesObj.push({
+            text,
+            date: new Date(Date.now()).toLocaleString(),
+        });
+    });
+}
 
 function cleanNotesResponse(text)
 {
-    return text.replaceAll("**", ""); // Remove markup
+    text = text.replaceAll("**", ""); // Remove markup
+
+    return text;
 }
 
 function cleanFlashcardsResponse(text)
@@ -112,7 +92,10 @@ function cleanFlashcardsResponse(text)
         if (index + 2 < allPos.length - 1)
         {
             backTxt = text.substring(backPos + "Back: ".length, allPos[index + 2] - "Front: ".length); // back to next front
-            backTxt = backTxt.substring(0, backTxt.indexOf("Flash Card")); // remove flash card text
+
+            let flashCardNumPos = backTxt.indexOf("Flash Card");
+            if (flashCardNumPos > -1)
+                backTxt = backTxt.substring(0, flashCardNumPos); // remove flash card text
         }
         else
             backTxt = text.substring(backPos + "Back: ".length); // last card, so dont try to go to next front
@@ -120,8 +103,6 @@ function cleanFlashcardsResponse(text)
         let newCard = new Flashcard(frontTxt, backTxt);
         flashcards.push(newCard);
     }
-
-    
 
     return flashcards;
 }
@@ -152,12 +133,75 @@ function getAllFrontAndBackPos(text)
 
     return pos;
 }
+  
+function addCard(question, answer) 
+{
+    const board = document.getElementById("artboard");
 
-let tempCleanedRes = cleanFlashcardsResponse(tempFlashcardsRes);
-console.log("Number of cards: " + tempCleanedRes.length);
-console.log("All Cards\n====================================\n");
+    const newCard = document.createElement("div");
+    newCard.className = "card";
+    board.appendChild(newCard);
+  
+    const cardBack = document.createElement("div");
+    cardBack.classList.add("card__side", "card__side--back");
+    newCard.appendChild(cardBack);
+  
+    const cardDetails = document.createElement("div");
+    cardDetails.className = "card__details";
+    cardBack.appendChild(cardDetails);
+  
+    // Card answer Text
+    const answerText = document.createElement("p");
+    cardDetails.appendChild(answerText);
+    // answerText.innerHTML = document.getElementById("answer").value;
+    answerText.innerHTML = answer;
+  
+    const cardFront = document.createElement("div");
+    cardFront.classList.add("card__side", "card__side--front");
+    newCard.appendChild(cardFront);
+  
+    const cardTheme = document.createElement("div");
+    cardTheme.className = "card__theme";
+    cardFront.appendChild(cardTheme);
+  
+    const cardThemeBox = document.createElement("div");
+    cardThemeBox.className = "card__theme-box";
+    cardTheme.appendChild(cardThemeBox);
+  
+    // Card question text
+    const questionText = document.createElement("p");
+    questionText.className = "card__title";
+    cardThemeBox.appendChild(questionText);
+    questionText.innerHTML = question;
+}
 
-tempCleanedRes.forEach((card) => {
-    console.log("Front:\n" + card.frontTxt);
-    console.log("Back:\n" + card.backTxt + "\n")
-})
+const addCardButton = document.getElementById("register-link");
+  
+//Button event to add card
+addCardButton.addEventListener("click", () =>
+{
+    let topic = document.getElementById("password").value;
+    let cardPrompt = 
+    `Generate "flash cards", where a "flash card" should take the form of a "front" and back" response.
+    The flash cards should contain conceptual questions on the following topic, and be limited to 9 cards or less: ${topic}`;
+
+    console.log("Generating flash cards for topic: " + topic);
+
+    postAPIData(cardPrompt).then((json) => 
+    {
+        let msg = json['choices'][0]['message']['content'];
+        console.log("Got msg:\n" + msg + "\n\n");
+        let parsedFlashcards = cleanFlashcardsResponse(msg);
+
+        parsedFlashcards.forEach(card => 
+        {
+            console.log("front: " + card.frontTxt + "\n");
+            console.log("back: " + card.backTxt);
+        });
+
+        parsedFlashcards.forEach(card =>
+        {
+            addCard(card.frontTxt, card.backTxt);
+        });
+    });
+});
