@@ -17,7 +17,7 @@ class Flashcard
 async function postAPIData(inputTxt) {
     // Default options are marked with *
     const url = "https://api.openai.com/v1/chat/completions";
-    const api_key = "00-pfP5WLhJUtbOaaAHZ8YsT3 BlbkFJYU6yvnQ9eB66BXqmHheX";
+    const api_key = "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";
     const data = {
         "model": "gpt-3.5-turbo",
         "messages": [{"role": "user", "content": inputTxt}],
